@@ -1,0 +1,12 @@
+dj-database-url
+django==2.2.5
+django-environ
+django-jquery
+notifications-python-client
+psycopg2-binary
+python-dotenv
+requests
+urllib3>=1.24.2
+django-staff-sso-client
+whitenoise
+gunicorn
