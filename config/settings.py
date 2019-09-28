@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'core',
+    'checker',
 ]
 
 MIDDLEWARE = [
@@ -109,3 +111,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CF_USERNAME = os.getenv("CF_USERNAME")
+CF_PASSWORD = os.getenv("CF_PASSWORD")
+CF_DOMAIN = os.getenv("CF_DOMAIN")
+ORG_GUID = os.getenv("ORG_GUID")

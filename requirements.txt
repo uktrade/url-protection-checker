@@ -6,6 +6,7 @@
 #
 certifi==2019.9.11        # via requests
 chardet==3.0.4            # via requests
+cloudfoundry-client==1.8.0
 dj-database-url==0.5.0
 django-environ==0.4.5
 django-jquery==3.1.0
@@ -17,14 +18,22 @@ gunicorn==19.9.0
 idna==2.8                 # via requests
 monotonic==1.5            # via notifications-python-client
 notifications-python-client==5.3.0
+oauth2-client==1.1.0      # via cloudfoundry-client
 oauthlib==3.1.0           # via requests-oauthlib
+protobuf==3.6.1           # via cloudfoundry-client
 psycopg2-binary==2.8.3
 pyjwt==1.7.1              # via notifications-python-client
 python-dotenv==0.10.3
 pytz==2019.2              # via django
+pyyaml==5.1               # via cloudfoundry-client
 raven==6.10.0             # via django-staff-sso-client
 requests-oauthlib==1.2.0  # via django-staff-sso-client
 requests==2.22.0
+six==1.12.0               # via protobuf, websocket-client
 sqlparse==0.3.0           # via django
 urllib3==1.25.6
+websocket-client==0.53.0  # via cloudfoundry-client
 whitenoise==4.1.4
+
+# The following packages are considered to be unsafe in a requirements file:
+# setuptools==41.2.0        # via protobuf
