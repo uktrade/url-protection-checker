@@ -12,3 +12,4 @@ cloudfoundry-client
 whitenoise
 gunicorn
 slacker
+cowsay
