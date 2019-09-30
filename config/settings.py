@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'user',
     'core',
     'checker',
 ]
@@ -73,6 +74,10 @@ DATABASES = {
     'default': dj_database_url.config()
 }
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'authbroker_client.backends.AuthbrokerBackend',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -106,13 +111,24 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGIN_REDIRECT_URL = 'admin:index'
+AUTH_USER_MODEL = 'user.User'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
+
+LOGIN_REDIRECT_URL = 'admin-login-view'
+LOGIN_URL = '/auth/login/'
+AUTHBROKER_URL = os.getenv("AUTHBROKER_URL")
+AUTHBROKER_CLIENT_ID = os.getenv("AUTHBROKER_CLIENT_ID")
+AUTHBROKER_CLIENT_SECRET = os.getenv("AUTHBROKER_CLIENT_SECRET")
+AUTHBROKER_SCOPES = "read write"
+RESTRICT_ADMIN = env.bool("RESTRICT_ADMIN", True)
 
 CF_USERNAME = os.getenv("CF_USERNAME")
 CF_PASSWORD = os.getenv("CF_PASSWORD")
 CF_DOMAIN = os.getenv("CF_DOMAIN")
 ORG_GUID = os.getenv("ORG_GUID")
+SLACK_TOKEN = os.getenv("SLACK_TOKEN")

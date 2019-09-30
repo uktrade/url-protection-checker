@@ -23,6 +23,6 @@ class Command(BaseCommand):
             space_list[space['name']] = space['guid']
         print(space_list)
 
-        #breakpoint()
+        # breakpoint()
         for space, guid in space_list.items():
             Spaces.objects.update_or_create(space_name=space, space_guid=guid)
