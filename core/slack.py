@@ -31,24 +31,28 @@ def hourly_alert():
 
 
 def daily_alert():
-
     slack = Slacker(settings.SLACK_TOKEN)
     slack_message = 'This is the daily url protection report.\n'
     slack_report = ''
+    cow_report = '```\n'
     count_routes_open = 0
+    space_name = ''
     for app in ApplicationsItem.objects.filter(check_enabled=True):
         if app.is_behind_vpn is False and app.is_behind_sso is False:
+            if space_name != app.spaces.space_name:
+                slack_report += f'\nSPACE: {app.spaces.space_name}\n'
             slack_report += f'The Application: {app.applications.app_name} '
             slack_report += f'in Space: {app.spaces.space_name} '
             slack_report += f'has the following route unprotected\n\t{app.app_route}\n'
             count_routes_open += 1
+            space_name = app.spaces.space_name
     slack_message += f'Number of routes open = {count_routes_open}'
     # Get a random cow say to spell out report to a string var.
     with io.StringIO() as buf, redirect_stdout(buf):
         getattr(cowsay, random.choice(cowsay_characters))(slack_message)
-        cow_report = buf.getvalue()
+        cow_report += buf.getvalue()
     # breakpoint()
-    cow_report += slack_report
+    cow_report += f'```\n```\n{slack_report}\n```'
     print(cow_report)
     if settings.SLACK_ENABLED == 'True':
         print("Sending results to slack")

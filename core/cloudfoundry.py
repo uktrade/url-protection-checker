@@ -60,8 +60,12 @@ def find_open_routes(cf_client, domains):
                     route_url = f'https://{domain}/{path}'
 
                 if domain != 'apps.internal':
-                    response = requests.get(route_url)
                     # breakpoint()
+                    try:
+                        response = requests.get(route_url)
+                    except requests.exceptions.RequestException as e:
+                        print(e)
+
                     if '<title>Access denied</title>' in str(response.content):
                         # print('Site is behind vpn')
                         ApplicationsItem.objects.update_or_create(
