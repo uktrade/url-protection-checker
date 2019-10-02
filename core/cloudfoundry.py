@@ -2,7 +2,6 @@ import requests
 
 from cloudfoundry_client.client import CloudFoundryClient
 from django.conf import settings
-from itertools import chain
 
 from checker.models import Spaces, Applications, ApplicationsItem
 
@@ -12,7 +11,6 @@ def cf_get_client(username, password, endpoint, http_proxy='', https_proxy=''):
     proxy = dict(http=http_proxy, https=https_proxy)
     client = CloudFoundryClient(target_endpoint, proxy=proxy)
     client.init_with_user_credentials(username, password)
-
     return client
 
 
@@ -24,42 +22,31 @@ def cf_login():
     return cf_client
 
 
-def get_domains_list(cf_client):
-    domains = {}
-    for domain in chain(cf_client.v2.private_domains.list(),
-                        cf_client.v2.shared_domains.list()):
-        domains[domain['metadata']['guid']] = domain['entity']['name']
-    return (domains)
-
-
-def find_open_routes(cf_client, domains):
+def find_open_routes(cf_client):
     # Check if space is enabled, if disabled delete records accisiated with that space.
     # This is needed if a space is no longer enabled.
-    # breakpoint()
     space_ids = Spaces.objects.filter(check_enabled=True).values_list('id', flat=True)
     ApplicationsItem.objects.exclude(spaces_id__in=space_ids).delete()
+
+    cf_token = cf_client._access_token
 
     for space_name, space_guid in Spaces.objects.values_list(
             'space_name',
             'space_guid').filter(check_enabled=True):
-        # print(space_name)
-        for app in cf_client.v3.apps.list(space_guids=space_guid):
-            # print(app['name'])
-            Applications.objects.update_or_create(app_name=app['name'])
-            # breakpoint()
-            for route in app.route_mappings():
-                route_mapping = route.route()
-                domain = domains[route_mapping['entity']['domain_guid']]
-                path = route_mapping['entity']['path']
-                host = route_mapping['entity']['host']
-                # print(f'https://{host}.{domain}/{path}')
-                # icheck if host was defined.
-                if host:
-                    route_url = f'https://{host}.{domain}/{path}'
-                else:
-                    route_url = f'https://{domain}/{path}'
 
-                if domain != 'apps.internal':
+        for app in cf_client.v3.apps.list(space_guids=space_guid):
+            Applications.objects.update_or_create(app_name=app['name'])
+
+            response = requests.get(
+                settings.CF_DOMAIN + '/v3/apps/' + app['guid'] + '/routes',
+                params={},
+                headers={'Authorization': f'Bearer {cf_token}'})
+            route_data = response.json()
+
+            for route in route_data['resources']:
+                route_url = 'https://' + route['url']
+
+                if 'apps.internal' not in route_url:
                     # breakpoint()
                     try:
                         response = requests.get(route_url)
