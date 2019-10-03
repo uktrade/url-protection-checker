@@ -65,7 +65,7 @@ def find_open_routes(cf_client):
 
                     elif response.url.startswith(
                             'https://sso.trade.gov.uk') or response.url.startswith(
-                            'http://sso.trade.uat.uktrade.io'):
+                            'https://sso.trade.uat.uktrade.io'):
 
                         # print('Site is behind Staff SSO')
                         ApplicationsItem.objects.update_or_create(
