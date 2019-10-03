@@ -63,7 +63,10 @@ def find_open_routes(cf_client):
                                 'is_behind_vpn': True,
                                 'spaces_id': Spaces.objects.get(space_name=space_name).id})
 
-                    elif 'https://sso.trade.gov.uk/saml2/login' in response.url:
+                    elif response.url.startswith(
+                            'https://sso.trade.gov.uk') or response.url.startswith(
+                            'http://sso.trade.uat.uktrade.io'):
+
                         # print('Site is behind Staff SSO')
                         ApplicationsItem.objects.update_or_create(
                             app_route=route_url,
@@ -81,4 +84,5 @@ def find_open_routes(cf_client):
                                 'applications_id': Applications.objects.get(
                                     app_name=app['name']).id,
                                 'is_behind_vpn': False,
+                                'is_behind_sso': False,
                                 'spaces_id': Spaces.objects.get(space_name=space_name).id})
