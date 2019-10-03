@@ -31,6 +31,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'user',
+    'core',
+    'checker',
 ]
 
 MIDDLEWARE = [
@@ -41,6 +44,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -71,6 +75,10 @@ DATABASES = {
     'default': dj_database_url.config()
 }
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'authbroker_client.backends.AuthbrokerBackend',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -94,7 +102,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-uk'
 
 TIME_ZONE = 'UTC'
 
@@ -104,8 +112,25 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGIN_REDIRECT_URL = 'admin:index'
+AUTH_USER_MODEL = 'user.User'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+LOGIN_REDIRECT_URL = 'admin-login-view'
+LOGIN_URL = '/auth/login/'
+AUTHBROKER_URL = os.getenv("AUTHBROKER_URL")
+AUTHBROKER_CLIENT_ID = os.getenv("AUTHBROKER_CLIENT_ID")
+AUTHBROKER_CLIENT_SECRET = os.getenv("AUTHBROKER_CLIENT_SECRET")
+AUTHBROKER_SCOPES = "read write"
+RESTRICT_ADMIN = env.bool("RESTRICT_ADMIN", True)
+
+CF_USERNAME = os.getenv("CF_USERNAME")
+CF_PASSWORD = os.getenv("CF_PASSWORD")
+CF_DOMAIN = os.getenv("CF_DOMAIN")
+ORG_GUID = os.getenv("ORG_GUID")
+SLACK_ENABLED = os.getenv("SLACK_ENABLED")
+SLACK_TOKEN = os.getenv("SLACK_TOKEN")

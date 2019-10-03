@@ -68,4 +68,4 @@ Temporary Items
 
 # Dynamically created
 .venv
-staticfiles
+static

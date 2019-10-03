@@ -1,3 +1,12 @@
 DEBUG=true
 SECRET_KEY=do-not-use-in-prod
 ALLOWED_HOSTS="localhost"
+AUTHBROKER_CLIENT_ID="some_secret"
+AUTHBROKER_CLIENT_SECRET= "some_secret"
+AUTHBROKER_URL= "sso_url"
+CF_USERNAME="cf_username"
+CF_PASSWORD="cf_password"
+CF_DOMAIN="cf_domain"
+ORG_GUID=""
+SLACK_ENABLED=False
+SLACK_TOKEN=""
