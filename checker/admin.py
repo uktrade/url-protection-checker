@@ -36,16 +36,16 @@ toggle_enabled.short_description = 'Toggle check enabled'
 @admin.register(ApplicationsItem)
 class applicationsitem_admin(admin.ModelAdmin):
     list_display = ('id',
-                    'get_space_name',
-                    'get_app_name',
+                    'space_name',
+                    'app_name',
                     'app_route',
                     'is_behind_vpn',
                     'is_behind_sso',
                     'check_enabled')
     actions = [toggle_enabled, ]
 
-    def get_app_name(self, obj):
+    def app_name(self, obj):
         return (obj.applications.app_name)
 
-    def get_space_name(self, obj):
-        return (obj.spaces.space_name)
+    def space_name(self, obj):
+        return (obj.applications.spaces.space_name)
