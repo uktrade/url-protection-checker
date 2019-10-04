@@ -17,13 +17,13 @@ def hourly_alert():
     slack = Slacker(settings.SLACK_TOKEN)
     for app in ApplicationsItem.objects.filter(check_enabled=True):
         if app.is_behind_vpn is False and app.is_behind_sso is False:
-            if space_name != app.spaces.space_name:
-                slack_message += f'\nSPACE: *{app.spaces.space_name}*\n'
+            if space_name != app.applications.spaces.space_name:
+                slack_message += f'\nSPACE: *{app.applications.spaces.space_name}*\n'
             slack_message += f'The Application: *{app.applications.app_name}* '
             # slack_message += f'in Space: {app.spaces.space_name} '
             slack_message += f'has the following route unprotected\n\t{app.app_route}\n'
             count_routes_open += 1
-            space_name = app.spaces.space_name
+            space_name = app.applications.spaces.space_name
     if count_routes_open > 0:
         print(slack_message)
         # breakpoint()
@@ -43,13 +43,13 @@ def daily_alert():
     space_name = ''
     for app in ApplicationsItem.objects.filter(check_enabled=True):
         if app.is_behind_vpn is False and app.is_behind_sso is False:
-            if space_name != app.spaces.space_name:
-                slack_report += f'\nSPACE: *{app.spaces.space_name}*\n'
+            if space_name != app.applications.spaces.space_name:
+                slack_report += f'\nSPACE: *{app.applications.spaces.space_name}*\n'
             slack_report += f'The Application: *{app.applications.app_name}* '
             # slack_report += f'in Space: {app.spaces.space_name} '
             slack_report += f'has the following route unprotected\n\t{app.app_route}\n'
             count_routes_open += 1
-            space_name = app.spaces.space_name
+            space_name = app.applications.spaces.space_name
     slack_message += f'Number of routes open = {count_routes_open}'
     # Get a random cow say to spell out report to a string var.
     with io.StringIO() as buf, redirect_stdout(buf):
