@@ -2,13 +2,13 @@ from django.db import models
 
 
 class Spaces(models.Model):
-    space_name = models.CharField(max_length=60)
-    space_guid = models.CharField(max_length=60)
+    space_name = models.CharField(max_length=90)
+    space_guid = models.CharField(max_length=90)
     check_enabled = models.BooleanField(default=True)
 
 
 class Applications(models.Model):
-    app_name = models.CharField(max_length=60)
+    app_name = models.CharField(max_length=90)
     spaces = models.ForeignKey(Spaces, on_delete=models.CASCADE)
 
 
