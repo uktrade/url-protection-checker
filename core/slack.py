@@ -15,8 +15,8 @@ def hourly_alert():
     count_routes_open = 0
     space_name = ''
     slack = Slacker(settings.SLACK_TOKEN)
-    for app in ApplicationsItem.objects.filter(check_enabled=True):
-        if app.is_behind_vpn is False and app.is_behind_sso is False:
+    for app in ApplicationsItem.objects.filter(reporting_enabled=True):
+        if app.is_protected is False:
             if space_name != app.applications.spaces.space_name:
                 slack_message += f'\nSPACE: *{app.applications.spaces.space_name}*\n'
             slack_message += f'The Application: *{app.applications.app_name}* '
@@ -41,8 +41,8 @@ def daily_alert():
     cow_report = '```\n'
     count_routes_open = 0
     space_name = ''
-    for app in ApplicationsItem.objects.filter(check_enabled=True):
-        if app.is_behind_vpn is False and app.is_behind_sso is False:
+    for app in ApplicationsItem.objects.filter(reporting_enabled=True):
+        if app.is_protected is False:
             if space_name != app.applications.spaces.space_name:
                 slack_report += f'\nSPACE: *{app.applications.spaces.space_name}*\n'
             slack_report += f'The Application: *{app.applications.app_name}* '

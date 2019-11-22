@@ -61,20 +61,21 @@ def find_open_routes(cf_client):
                 params={},
                 headers={'Authorization': f'Bearer {cf_token}'})
             route_data = response.json()
-
+            # breakpoint()
             for route in route_data['resources']:
                 route_url = 'https://' + route['url']
-
+                print(route_url)
                 if 'apps.internal' not in route_url:
                     try:
                         response = requests.get(route_url)
+                        # print(response.url)
+                        # print(response.status_code)
                     except requests.exceptions.RequestException as e:
                         print(e)
 
                     # Check if route works.
                     if not response.content.decode('utf-8').startswith(
                             '404 Not Found: Requested route'):
-
                         if '<title>Access denied</title>' in str(response.content):
                             # print('Site is behind vpn')
                             ApplicationsItem.objects.update_or_create(
@@ -82,7 +83,7 @@ def find_open_routes(cf_client):
                                 defaults={
                                     'applications_id': Applications.objects.get(
                                         app_name=app['name']).id,
-                                    'is_behind_vpn': True})
+                                    'is_behind_vpn': True, 'is_protected': True})
 
                         elif response.url.startswith(
                                 'https://sso.trade.gov.uk') or response.url.startswith(
@@ -94,7 +95,16 @@ def find_open_routes(cf_client):
                                 defaults={
                                     'applications_id': Applications.objects.get(
                                         app_name=app['name']).id,
-                                    'is_behind_sso': True})
+                                    'is_behind_sso': True, 'is_protected': True})
+
+                        elif response.status_code == 401:
+                            ApplicationsItem.objects.update_or_create(
+                                app_route=route_url,
+                                defaults={
+                                    'applications_id': Applications.objects.get(
+                                        app_name=app['name']).id,
+                                    'is_behind_app_auth': True, 'is_protected': True})
+                            # print('unauthourised')
 
                         else:
                             # print('Site is open')
@@ -104,7 +114,9 @@ def find_open_routes(cf_client):
                                     'applications_id': Applications.objects.get(
                                         app_name=app['name']).id,
                                     'is_behind_vpn': False,
-                                    'is_behind_sso': False})
+                                    'is_behind_sso': False,
+                                    'is_behind_app_auth': False,
+                                    'is_protected': False})
                     else:
                         try:
                             ApplicationsItem.objects.get(app_route=route_url).delete()
