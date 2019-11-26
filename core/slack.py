@@ -2,12 +2,25 @@ import cowsay
 import io
 import random
 from slacker import Slacker
-from checker.models import ApplicationsItem
+from checker.models import ApplicationsItem, NonPaasSites
 from django.conf import settings
 from contextlib import redirect_stdout
 
 
 cowsay_characters = cowsay.char_names
+
+
+def non_paas_alert():
+    open_site_list = ''
+    sites_to_check = NonPaasSites.objects.filter(reporting_enabled=True)
+    if sites_to_check.filter(is_protected=False):
+        open_site_list += 'The following non PaaS sites are open\n'
+        for site in sites_to_check:
+            if site.is_protected is False:
+                open_site_list += f'{site.site_url}\n'
+        print(open_site_list)
+        slack = Slacker(settings.SLACK_TOKEN)
+        slack.chat.post_message('#webops', open_site_list)
 
 
 def hourly_alert():
@@ -32,6 +45,8 @@ def hourly_alert():
             slack.chat.post_message('#webops', slack_message)
     else:
         print('All good, no open routes')
+
+    non_paas_alert()
 
 
 def daily_alert():
@@ -61,3 +76,5 @@ def daily_alert():
     if settings.SLACK_ENABLED == 'True':
         print("Sending results to slack")
         slack.chat.post_message('#webops', cow_report)
+
+    non_paas_alert()

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Spaces, ApplicationsItem
+from .models import Spaces, ApplicationsItem, NonPaasSites
 
 
 def space_toggle_enabled(modeladmin, request, queryset):
@@ -21,16 +21,16 @@ class service_admin(admin.ModelAdmin):
     actions = [space_toggle_enabled, ]
 
 
-def toggle_enabled(modeladmin, request, queryset):
+def toggle_reporting(modeladmin, request, queryset):
     for app_route in queryset:
-        if app_route.check_enabled:
-            app_route.check_enabled = False
+        if app_route.reporting_enabled:
+            app_route.reporting_enabled = False
         else:
-            app_route.check_enabled = True
+            app_route.reporting_enabled = True
         app_route.save()
 
 
-toggle_enabled.short_description = 'Toggle check enabled'
+toggle_reporting.short_description = 'Toggle check enabled'
 
 
 @admin.register(ApplicationsItem)
@@ -45,7 +45,7 @@ class applicationsitem_admin(admin.ModelAdmin):
                     'is_behind_app_auth',
                     'reporting_enabled',
                     'is_protected')
-    actions = [toggle_enabled, ]
+    actions = [toggle_reporting, ]
 
     def app_name(self, obj):
         return (obj.applications.app_name)
@@ -55,3 +55,21 @@ class applicationsitem_admin(admin.ModelAdmin):
 
     def org_name(self, obj):
         return (obj.applications.spaces.orgs.org_name)
+
+
+def nonpaassites_toggle_reporting(modeladmin, request, queryset):
+    for site_name in queryset:
+        if site_name.reporting_enabled:
+            site_name.reporting_enabled = False
+        else:
+            site_name.reporting_enabled = True
+        site_name.save()
+
+
+nonpaassites_toggle_reporting.short_description = 'Toggle check enabled'
+
+
+@admin.register(NonPaasSites)
+class nonpaassites_admin(admin.ModelAdmin):
+    list_display = ('id', 'site_name', 'site_url', 'is_protected', 'reporting_enabled')
+    actions = [nonpaassites_toggle_reporting, ]
