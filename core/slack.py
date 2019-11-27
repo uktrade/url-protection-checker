@@ -20,7 +20,9 @@ def non_paas_alert():
                 open_site_list += f'{site.site_url}\n'
         print(open_site_list)
         slack = Slacker(settings.SLACK_TOKEN)
-        slack.chat.post_message('#webops', open_site_list)
+        if settings.SLACK_ENABLED == 'True':
+            print("Sending results to slack")
+            slack.chat.post_message('#webops', open_site_list)
 
 
 def hourly_alert():

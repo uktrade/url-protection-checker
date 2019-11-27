@@ -54,7 +54,7 @@ def find_open_routes(cf_client):
             Applications.objects.update_or_create(
                 app_name=app['name'],
                 defaults={
-                    'spaces_id': Spaces.objects.get(space_name=space_name).id})
+                    'spaces_id': Spaces.objects.get(space_guid=space_guid).id})
 
             response = requests.get(
                 settings.CF_DOMAIN + '/v3/apps/' + app['guid'] + '/routes',
