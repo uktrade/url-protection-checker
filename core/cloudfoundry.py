@@ -61,7 +61,18 @@ def find_open_routes(cf_client):
                 params={},
                 headers={'Authorization': f'Bearer {cf_token}'})
             route_data = response.json()
-            # breakpoint()
+
+            # Delete routes from table that have now been removed from app.
+            list_of_routes = []
+            for route in route_data['resources']:
+                list_of_routes.append(f"https://{route['url']}")
+            for route_to_check in ApplicationsItem.objects.values_list(
+                    'app_route', flat=True).filter(applications__app_name=app['name']):
+                if route_to_check not in list_of_routes:
+                    print(f'deleting this route: {route_to_check}')
+                    ApplicationsItem.objects.get(app_route=route_to_check).delete()
+
+            # Add/Update routes and check if protected.
             for route in route_data['resources']:
                 route_url = 'https://' + route['url']
                 print(route_url)
