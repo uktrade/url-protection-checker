@@ -69,11 +69,12 @@ def daily_alert():
             space_name = app.applications.spaces.space_name
     slack_message += f'Number of routes open = {count_routes_open}'
     # Get a random cow say to spell out report to a string var.
-    with io.StringIO() as buf, redirect_stdout(buf):
-        getattr(cowsay, random.choice(cowsay_characters))(slack_message)
-        cow_report += buf.getvalue()
+    # with io.StringIO() as buf, redirect_stdout(buf):
+    #     getattr(cowsay, random.choice(cowsay_characters))(slack_message)
+    #     cow_report += buf.getvalue()
     # breakpoint()
-    cow_report += f'```\n```\n{slack_report}\n```'
+    # cow_report += f'```\n```\n{slack_report}\n```'
+    cow_report += f'{slack_report}\n```'
     print(cow_report)
     if settings.SLACK_ENABLED == 'True':
         print("Sending results to slack")
