@@ -75,6 +75,7 @@ def daily_alert():
     # breakpoint()
     # cow_report += f'```\n```\n{slack_report}\n```'
     cow_report += f'{slack_report}\n```'
+    cow_report += f'\n```{slack_message}```\n'
     print(cow_report)
     if settings.SLACK_ENABLED == 'True':
         print("Sending results to slack")
