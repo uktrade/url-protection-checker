@@ -87,6 +87,7 @@ def find_open_routes(cf_client):
                     # Check if route works.
                     if not response.content.decode('utf-8').startswith(
                             '404 Not Found: Requested route'):
+                        # Check for non-prod IP filter
                         if '<title>Access denied</title>' in str(response.content):
                             # print('Site is behind vpn')
                             ApplicationsItem.objects.update_or_create(
@@ -108,6 +109,7 @@ def find_open_routes(cf_client):
                                         app_name=app['name']).id,
                                     'is_behind_sso': True, 'is_protected': True})
 
+                        # Check for basic Auth
                         elif response.status_code == 401:
                             ApplicationsItem.objects.update_or_create(
                                 app_route=route_url,
@@ -115,6 +117,15 @@ def find_open_routes(cf_client):
                                     'applications_id': Applications.objects.get(
                                         app_name=app['name']).id,
                                     'is_behind_app_auth': True, 'is_protected': True})
+
+                        # Check for prod IP filter
+                        elif response.status_code == 403:
+                            ApplicationsItem.objects.update_or_create(
+                                app_route=route_url,
+                                defaults={
+                                    'applications_id': Applications.objects.get(
+                                        app_name=app['name']).id,
+                                    'is_behind_vpn': True, 'is_protected': True})
                             # print('unauthourised')
 
                         else:
