@@ -27,6 +27,7 @@ class ApplicationsItem(models.Model):
     is_behind_app_auth = models.BooleanField(default=False)
     is_protected = models.BooleanField(default=False)
     reporting_enabled = models.BooleanField(default=True)
+    reporting_disabled_reason = models.CharField(max_length=120, blank=True)
 
 
 class NonPaasSites(models.Model):

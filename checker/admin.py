@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib import messages
 
 from .models import Spaces, ApplicationsItem, NonPaasSites
 
@@ -44,7 +45,8 @@ class applicationsitem_admin(admin.ModelAdmin):
                     'is_behind_sso',
                     'is_behind_app_auth',
                     'reporting_enabled',
-                    'is_protected')
+                    'is_protected',
+                    'reporting_disabled_reason')
     actions = [toggle_reporting, ]
 
     def app_name(self, obj):
