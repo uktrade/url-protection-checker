@@ -1,7 +1,25 @@
 from django.contrib import admin
-from django.contrib import messages
-
 from .models import Spaces, ApplicationsItem, NonPaasSites
+
+
+from django.forms import ValidationError, ModelForm
+
+
+class CheckForm(ModelForm):
+    class Meta:
+        model = ApplicationsItem
+        exclude = []
+
+    def clean(self):
+        data = super().clean()
+        if not data['reporting_enabled'] and not data['reporting_disabled_reason']:
+            raise ValidationError('You need to supply a reason why report is disabled')
+
+        return data
+
+
+class modeladmin(admin.ModelAdmin):
+    form = CheckForm
 
 
 def space_toggle_enabled(modeladmin, request, queryset):
@@ -36,6 +54,7 @@ toggle_reporting.short_description = 'Toggle check enabled'
 
 @admin.register(ApplicationsItem)
 class applicationsitem_admin(admin.ModelAdmin):
+    form = CheckForm
     list_display = ('id',
                     'org_name',
                     'space_name',
