@@ -15,19 +15,48 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    # Runs a single command using the runners shell
-    - name: Run a one-line script
-      run: echo Hello, world!
-
-    # Runs a set of commands using the runners shell
-    - name: Run a multi-line script
+    - name: Install cf-cli
       run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+        sudo wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
+        echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
+        sudo apt-get update
+        sudo apt-get install -y cf-cli
+
+    # - name: set environment variables
+    #   uses: allenevans/set-env@v1.0.0
+    #   with:
+    #     ALLOWED_HOSTS: 'mytestappsandbox.london.cloudapps.digital'
+    #     SECRET_KEY: '${{ secrets.DJANGO_SECRET }}'
+    #     SLACK_ENABLED: 'False'
+
+    # - name: cf-cli plugin
+    #   uses: citizen-of-planet-earth/cf-cli-action@master
+    #   with:
+    #     cf_api: ${{ secrets.CF_API }}
+    #     cf_username: ${{ secrets.CF_USER }}
+    #     cf_password: ${{ secrets.CF_PASSWORD }}
+    #     cf_org: ${{ secrets.CF_ORG }}
+    #     cf_space: ${{ secrets.CF_SPACE }}
+    #     command: |
+    #       set-env my_test_app_sandbox ALLOWED_HOSTS '${{ secrets.ALLOWED_HOSTS }}'
+    #       set-env my_test_app_sandbox DISABLE_COLLECTSTATIC 1
+
+    - name: Login to CF endpoint
+      run: cf login -a ${{ secrets.CF_API }} -u ${{ secrets.CF_USER }} -p ${{ secrets.CF_PASSWORD }} -o ${{ secrets.CF_ORG }} -s ${{ secrets.CF_SPACE }}
+
+    - name: Set CF Env
+      run: |
+        cf set-env my_test_app_sandbox ALLOWED_HOSTS '${{ secrets.ALLOWED_HOSTS }}'
+        cf set-env my_test_app_sandbox DISABLE_COLLECTSTATIC 1
+        cf set-env my_test_app_sandbox SLACK_ENABLED 'False'
+        cf set-env my_test_app_sandbox SECRET_KEY '${{ secrets.DJANGO_SECRET }}'
+
+    - name: Deploy app
+      run: cf push my_test_app_sandbox -b python_buildpack
