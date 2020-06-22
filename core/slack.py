@@ -46,6 +46,7 @@ def daily_alert():
         slack_report += f'{urls_open}\n```'
 
     slack_report += f'\n```{slack_message}```\n'
+    print(slack_report)
 
     if settings.SLACK_ENABLED == 'True':
         print("Sending results to slack")
