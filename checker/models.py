@@ -9,8 +9,9 @@ class Orgs(models.Model):
 
 class Spaces(models.Model):
     space_name = models.CharField(max_length=90)
-    space_guid = models.CharField(max_length=90)
+    space_guid = models.CharField(max_length=90, unique=True)
     check_enabled = models.BooleanField(default=True)
+    filter_guid = models.CharField(max_length=90, default='-1')
     orgs = models.ForeignKey(Orgs, on_delete=models.CASCADE)
 
 
@@ -22,6 +23,7 @@ class Applications(models.Model):
 class ApplicationsItem(models.Model):
     applications = models.ForeignKey(Applications, on_delete=models.CASCADE)
     app_route = models.URLField(blank=True)
+    route_guid = models.CharField(max_length=90, blank=True)
     is_behind_vpn = models.BooleanField(default=False)
     is_behind_sso = models.BooleanField(default=False)
     is_behind_app_auth = models.BooleanField(default=False)
