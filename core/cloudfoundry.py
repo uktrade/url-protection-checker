@@ -1,9 +1,22 @@
 import requests
+import json
 
 from cloudfoundry_client.client import CloudFoundryClient
 from django.conf import settings
 
 from checker.models import Spaces, Applications, ApplicationsItem
+
+
+class bcolours:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 
 def cf_get_client(username, password, endpoint, http_proxy="", https_proxy=""):
@@ -75,11 +88,12 @@ def find_open_routes(cf_client):
                 if "apps.internal" not in route_url:
                     try:
                         response = requests.get(route_url)
-                        # print(response.url)
-                        # print(response.status_code)
+
                     except requests.exceptions.RequestException as e:
                         print(e)
-                    # breakpoint()
+                        response._content = b'<small>unknown_route</small>'
+
+                    #breakpoint()
                     # Check if route works.
                     if not "<small>unknown_route</small>" in str(response.content):
                         # Check for non-prod IP filter
@@ -91,6 +105,7 @@ def find_open_routes(cf_client):
                                     "applications_id": Applications.objects.get(app_name=app["name"]).id,
                                     "is_behind_vpn": True,
                                     "is_protected": True,
+                                    "route_guid": route["guid"],
                                 },
                             )
 
@@ -105,6 +120,7 @@ def find_open_routes(cf_client):
                                     "applications_id": Applications.objects.get(app_name=app["name"]).id,
                                     "is_behind_sso": True,
                                     "is_protected": True,
+                                    "route_guid": route["guid"],
                                 },
                             )
 
@@ -116,6 +132,7 @@ def find_open_routes(cf_client):
                                     "applications_id": Applications.objects.get(app_name=app["name"]).id,
                                     "is_behind_app_auth": True,
                                     "is_protected": True,
+                                    "route_guid": route["guid"],
                                 },
                             )
 
@@ -127,12 +144,14 @@ def find_open_routes(cf_client):
                                     "applications_id": Applications.objects.get(app_name=app["name"]).id,
                                     "is_behind_vpn": True,
                                     "is_protected": True,
+                                    "route_guid": route["guid"],
                                 },
                             )
                             # print('unauthourised')
 
                         else:
                             # print('Site is open')
+                            # breakpoint()
                             ApplicationsItem.objects.update_or_create(
                                 app_route=route_url,
                                 defaults={
@@ -141,6 +160,7 @@ def find_open_routes(cf_client):
                                     "is_behind_sso": False,
                                     "is_behind_app_auth": False,
                                     "is_protected": False,
+                                    "route_guid": route["guid"],
                                 },
                             )
                     else:
@@ -148,3 +168,40 @@ def find_open_routes(cf_client):
                             ApplicationsItem.objects.get(app_route=route_url).delete()
                         except ApplicationsItem.DoesNotExist:
                             pass
+
+
+def lock_unprotected(cf_client):
+    # breakpoint()
+    cf_token = cf_client._access_token
+
+    for app_item in ApplicationsItem.objects.filter(is_protected='False',  reporting_enabled='True'):
+        print(f"Route NOT currently bound: {bcolours.WARNING}{app_item.app_route}\nBinding {app_item.app_route} to IP Filter{bcolours.ENDC}")
+        json_data = {
+            'relationships': {
+                'route': {
+                    'data': {
+                        'guid': app_item.route_guid
+                    }
+                },
+                'service_instance': {
+                    'data': {
+                        'guid': app_item.applications.spaces.filter_guid
+                        }
+                }
+            }
+        }
+        if settings.BIND_ENABLED == 'True':
+            response = requests.post(
+                settings.CF_DOMAIN + "/v3/service_route_bindings",
+                headers={"Authorization": f"Bearer {cf_token}", "Content-Type": "application/json"},
+                data=json.dumps(json_data),
+            )
+            # breakpoint()
+            bind_response = response.json()
+            print(bind_response['last_operation']['state'])
+            print(f"{bcolours.OKGREEN}{app_item.app_route} is now bound to IP Filter{bcolours.ENDC}")
+            app_item.is_behind_vpn = True
+            app_item.is_protected = True
+            app_item.save()
+        else:
+            print(f"{bcolours.OKCYAN}Running in demo mode {app_item.app_route} will NOT be bound{bcolours.ENDC}")
