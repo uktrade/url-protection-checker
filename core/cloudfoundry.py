@@ -172,10 +172,12 @@ def find_open_routes(cf_client):
 
 def lock_unprotected(cf_client):
     # breakpoint()
+    slack_report = ''
     cf_token = cf_client._access_token
 
     for app_item in ApplicationsItem.objects.filter(is_protected='False',  reporting_enabled='True'):
-        print(f"Route NOT currently bound: {bcolours.WARNING}{app_item.app_route}\nBinding {app_item.app_route} to IP Filter{bcolours.ENDC}")
+        print(f"Route is open to public: {bcolours.WARNING}{app_item.app_route}\nBinding {app_item.app_route} to IP Filter{bcolours.ENDC}")
+        slack_report += f"Route was open to public: {app_item.app_route}"
         json_data = {
             'relationships': {
                 'route': {
@@ -200,8 +202,11 @@ def lock_unprotected(cf_client):
             bind_response = response.json()
             print(bind_response['last_operation']['state'])
             print(f"{bcolours.OKGREEN}{app_item.app_route} is now bound to IP Filter{bcolours.ENDC}")
+            slack_report += f"\nThis route has now been bound to IP filter\n"
             app_item.is_behind_vpn = True
             app_item.is_protected = True
             app_item.save()
         else:
             print(f"{bcolours.OKCYAN}Running in demo mode {app_item.app_route} will NOT be bound{bcolours.ENDC}")
+
+    return slack_report

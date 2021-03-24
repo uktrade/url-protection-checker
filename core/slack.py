@@ -23,7 +23,7 @@ def non_paas_alert():
             r = requests.post(url, data=json.dumps(data), headers=headers)
 
 
-def daily_alert():
+def daily_alert(ip_filter_slack_report):
     slack_message = 'This is the daily url protection report.\n'
     urls_open = ''
     slack_report = ''
@@ -46,6 +46,9 @@ def daily_alert():
         slack_report += f'{urls_open}\n```'
 
     slack_report += f'\n```{slack_message}```\n'
+    # breakpoint()
+    if ip_filter_slack_report:
+        slack_report += f'\n```{ip_filter_slack_report}```\n'
     print(slack_report)
 
     if settings.SLACK_ENABLED == 'True':

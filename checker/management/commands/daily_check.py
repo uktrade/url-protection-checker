@@ -11,5 +11,5 @@ class Command(BaseCommand):
         cf_client = cf_login()
         find_open_routes(cf_client)
         check_routes()
-        daily_alert()
-        lock_unprotected(cf_client)
+        slack_report = lock_unprotected(cf_client)
+        daily_alert(slack_report)
