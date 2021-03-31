@@ -8,6 +8,6 @@ python-dotenv
 requests
 urllib3>=1.24.2
 django-staff-sso-client
-cloudfoundry-client
+cloudfoundry-client==1.16.1
 whitenoise
 gunicorn
