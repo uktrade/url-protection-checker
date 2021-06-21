@@ -1,12 +1,12 @@
 dj-database-url
-django==2.2.18
+django==2.2.24
 django-environ
 django-jquery
 notifications-python-client
 psycopg2-binary
 python-dotenv
 requests
-urllib3>=1.24.2
+urllib3>=1.24.9
 django-staff-sso-client
 cloudfoundry-client==1.16.1
 whitenoise
