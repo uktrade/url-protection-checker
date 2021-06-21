@@ -6,7 +6,7 @@ notifications-python-client
 psycopg2-binary
 python-dotenv
 requests
-urllib3>=1.24.9
+urllib3>=1.25.9
 django-staff-sso-client
 cloudfoundry-client==1.16.1
 whitenoise
