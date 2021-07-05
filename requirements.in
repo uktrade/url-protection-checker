@@ -6,6 +6,7 @@ notifications-python-client
 psycopg2-binary
 python-dotenv
 requests
+sentry-sdk
 urllib3>=1.26.5
 django-staff-sso-client
 cloudfoundry-client==1.16.1
