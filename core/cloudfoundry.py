@@ -171,7 +171,7 @@ def find_open_routes(cf_client):
 
 
 def lock_unprotected(cf_client):
-    # breakpoint()
+    breakpoint()
     slack_report = ''
     cf_token = cf_client._access_token
 
@@ -192,7 +192,7 @@ def lock_unprotected(cf_client):
                 }
             }
         }
-        if settings.BIND_ENABLED == 'True':
+        if settings.BIND_ENABLED == 'True' and app_item.applications.spaces.filter_guid !=  '-1':
             response = requests.post(
                 settings.CF_DOMAIN + "/v3/service_route_bindings",
                 headers={"Authorization": f"Bearer {cf_token}", "Content-Type": "application/json"},
@@ -207,6 +207,6 @@ def lock_unprotected(cf_client):
             app_item.is_protected = True
             app_item.save()
         else:
-            print(f"{bcolours.OKCYAN}Running in demo mode {app_item.app_route} will NOT be bound{bcolours.ENDC}")
+            print(f"{bcolours.OKCYAN}{app_item.app_route} will NOT be bound{bcolours.ENDC}")
 
     return slack_report
