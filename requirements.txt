@@ -11,7 +11,9 @@ async-timeout==3.0.1
 attrs==21.2.0
     # via aiohttp
 certifi==2021.5.30
-    # via requests
+    # via
+    #   requests
+    #   sentry-sdk
 chardet==3.0.4
     # via
     #   aiohttp
@@ -72,6 +74,8 @@ requests==2.25.1
     #   notifications-python-client
     #   oauth2-client
     #   requests-oauthlib
+sentry-sdk==1.1.0
+    # via -r requirements.in
 six==1.16.0
     # via
     #   protobuf
@@ -84,6 +88,7 @@ urllib3==1.26.5
     # via
     #   -r requirements.in
     #   requests
+    #   sentry-sdk
 websocket-client==0.54.0
     # via cloudfoundry-client
 whitenoise==5.2.0
