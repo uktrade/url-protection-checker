@@ -171,7 +171,7 @@ def find_open_routes(cf_client):
 
 
 def lock_unprotected(cf_client):
-    breakpoint()
+    # breakpoint()
     slack_report = ''
     cf_token = cf_client._access_token
 
