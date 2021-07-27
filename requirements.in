@@ -3,7 +3,7 @@ django==2.2.24
 django-environ
 django-jquery
 notifications-python-client
-psycopg2-binary
+psycopg2-binary==2.8.6
 python-dotenv
 requests
 sentry-sdk
