@@ -52,6 +52,7 @@ def toggle_reporting(modeladmin, request, queryset):
 toggle_reporting.short_description = 'Toggle check enabled'
 
 
+
 @admin.register(ApplicationsItem)
 class applicationsitem_admin(admin.ModelAdmin):
     form = CheckForm
@@ -67,6 +68,12 @@ class applicationsitem_admin(admin.ModelAdmin):
                     'is_protected',
                     'reporting_disabled_reason')
     actions = [toggle_reporting, ]
+
+    list_filter = ('reporting_enabled', 'is_protected')
+
+    search_fields = ['applications__app_name',
+                        'applications__spaces__orgs__org_name',
+                        'applications__spaces__space_name']
 
     def app_name(self, obj):
         return (obj.applications.app_name)
