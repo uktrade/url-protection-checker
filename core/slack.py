@@ -51,14 +51,16 @@ def daily_alert(ip_filter_slack_report):
         slack_report += f'\n```{ip_filter_slack_report}```\n'
     print(slack_report)
 
-    if settings.SLACK_ENABLED == 'True':
-        print("Sending results to slack")
-        url = f'{settings.SLACK_URL}/api/chat.postMessage'
-        data = {'channel': f'{settings.SLACK_CHANNEL}', 'text': slack_report}
-        headers = {'Content-type': 'application/json; charset=utf-8',
-                    'Authorization': f'Bearer {settings.SLACK_TOKEN}'}
-        r = requests.post(url, data=json.dumps(data), headers=headers)
-        print(r.text)
-        print(slack_report)
+    #breakpoint()
+    if count_routes_open > 0:
+        if settings.SLACK_ENABLED == 'True':
+            print("Sending results to slack")
+            url = f'{settings.SLACK_URL}/api/chat.postMessage'
+            data = {'channel': f'{settings.SLACK_CHANNEL}', 'text': slack_report}
+            headers = {'Content-type': 'application/json; charset=utf-8',
+                        'Authorization': f'Bearer {settings.SLACK_TOKEN}'}
+            r = requests.post(url, data=json.dumps(data), headers=headers)
+            print(r.text)
+            print(slack_report)
 
     non_paas_alert()
