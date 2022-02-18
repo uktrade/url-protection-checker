@@ -34,9 +34,11 @@ INSTALLED_APPS = [
     'user',
     'core',
     'checker',
+    'healthcheck'
 ]
 
 MIDDLEWARE = [
+    'healthcheck.middleware.HealthCheckMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

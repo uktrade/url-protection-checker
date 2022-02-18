@@ -8,4 +8,5 @@ urlpatterns = [
     path('admin/login/', admin_login_view, name='admin-login-view'),
     path('admin/', admin.site.urls),
     url(r'^', include('checker.urls')),
+    url(r'^', include('healthcheck.urls')),
 ]
