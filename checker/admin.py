@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Spaces, ApplicationsItem, NonPaasSites
+from .models import Orgs, Spaces, ApplicationsItem, NonPaasSites
 
 
 from django.forms import ValidationError, ModelForm
@@ -22,6 +22,33 @@ class modeladmin(admin.ModelAdmin):
     form = CheckForm
 
 
+def toggle_space(orgs_id, check):
+    #breakpoint()
+    for space_obj in Spaces.objects.filter(orgs_id=orgs_id):
+        space_obj.check_enabled = check
+        space_obj.save()
+
+
+def org_toggle_enabled(modeladmin, request, queryset):
+    for org in queryset:
+        if org.check_enabled:
+            org.check_enabled = False
+            toggle_space(org.id, False)
+        else:
+            org.check_enabled = True
+            toggle_space(org.id, True)
+        org.save()
+
+
+org_toggle_enabled.short_description = 'Toggle check enabled'
+
+
+@admin.register(Orgs)
+class org_admin(admin.ModelAdmin):
+    list_display = ('id', 'org_name', 'org_guid', 'check_enabled')
+    actions = [org_toggle_enabled, ]
+
+
 def space_toggle_enabled(modeladmin, request, queryset):
     for space_name in queryset:
         if space_name.check_enabled:
@@ -35,7 +62,7 @@ space_toggle_enabled.short_description = 'Toggle check enabled'
 
 
 @admin.register(Spaces)
-class service_admin(admin.ModelAdmin):
+class space_admin(admin.ModelAdmin):
     list_display = ('id', 'space_name', 'space_guid', 'check_enabled')
     actions = [space_toggle_enabled, ]
 
@@ -50,7 +77,6 @@ def toggle_reporting(modeladmin, request, queryset):
 
 
 toggle_reporting.short_description = 'Toggle check enabled'
-
 
 
 @admin.register(ApplicationsItem)

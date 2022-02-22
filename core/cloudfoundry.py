@@ -32,6 +32,43 @@ def cf_login():
     return cf_client
 
 
+def get_spaces_no_ip_filter(cf_client):
+    cf_token = cf_client._access_token
+    #breakpoint()
+    #Only run if space is enabled and there is no filter in this space (filter_guid=-1)
+    for space_obj in Spaces.objects.filter(check_enabled=True,filter_guid=-1):
+        #Only auto-bind in orgs that are listed (eg, might not want to bind prod org)
+        if not space_obj.orgs.org_name in settings.EXCLUDE_ORG_AUTO_FILTER_SERVICE:
+            print(f"{bcolours.WARNING}{space_obj.space_name} space has no ip filter.  Creating IP Filter{bcolours.ENDC}")
+            if settings.AUTO_CREATE_IP_FILTER_ENABLED:
+                json_data = {
+                    'type': 'user-provided',
+                    'name': 'ip-filter-service',
+                    'route_service_url': f'{settings.FILTER_URL}',
+                    'relationships': {
+                        'space': {
+                            'data': {
+                                'guid': space_obj.space_guid
+                            }
+                        },
+                    }
+                }
+
+                response = requests.post(
+                    settings.CF_DOMAIN + "/v3/service_instances",
+                    headers={"Authorization": f"Bearer {cf_token}", "Content-Type": "application/json"},
+                    data=json.dumps(json_data),
+                )
+                #breakpoint()
+                service_response = response.json()
+                #Add new service to DB
+                space_obj.filter_guid = service_response['guid']
+                space_obj.save()
+            else:
+                print(f"{bcolours.OKCYAN}IP Filter not created running in test mode{bcolours.ENDC}")
+
+
+
 def find_open_routes(cf_client):
     # Check if space is enabled, if disabled delete records accisiated with that space.
     # This is needed if a space is no longer enabled.
