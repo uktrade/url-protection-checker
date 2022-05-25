@@ -10,6 +10,8 @@ aiosignal==1.2.0
     # via aiohttp
 async-timeout==4.0.2
     # via aiohttp
+asynctest==0.13.0
+    # via aiohttp
 attrs==21.4.0
     # via aiohttp
 certifi==2021.10.8
@@ -65,7 +67,7 @@ protobuf==3.19.4
     #   cloudfoundry-client
 psycopg2-binary==2.8.6
     # via -r requirements.in
-pyjwt==2.3.0
+pyjwt==2.4.0
     # via notifications-python-client
 python-dotenv==0.19.2
     # via -r requirements.in
@@ -88,6 +90,11 @@ six==1.16.0
     # via websocket-client
 sqlparse==0.4.2
     # via django
+typing-extensions==4.2.0
+    # via
+    #   aiohttp
+    #   async-timeout
+    #   yarl
 urllib3==1.26.8
     # via
     #   -r requirements.in
