@@ -67,7 +67,7 @@ protobuf==3.19.4
     #   cloudfoundry-client
 psycopg2-binary==2.8.6
     # via -r requirements.in
-pyjwt==2.3.0
+pyjwt==2.4.0
     # via notifications-python-client
 python-dotenv==0.19.2
     # via -r requirements.in
