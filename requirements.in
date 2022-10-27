@@ -13,3 +13,6 @@ cloudfoundry-client>=1.16.1
 whitenoise
 gunicorn
 protobuf>=3.15.0
+
+# Pinning versions to address security alert
+oauthlib>=3.2.1
