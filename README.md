@@ -1,6 +1,6 @@
 # URL Protection Checker
 
-Maintains a list of URLs that should be protected by the IP Filter and alerts if it ever finds someone has been able to access them from an IP address which has not been whitelisted.
+Maintains a list of URLs that are publicly accessible on GOV.UK PaaS and, unless the URL is whitelisted in the URL Protection Checker, alerts if the URL is not protected by Staff SSO or the IP Filter.
 
 # Adding a new admin user
 
