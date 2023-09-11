@@ -1,3 +1,6 @@
+import dj_database_url
+from dbt_copilot_python.database import database_url_from_env
+
 from config.settings.base import *
 
 # SECURITY WARNING: keep the secret key used in production secret!
