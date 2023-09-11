@@ -1,4 +1,4 @@
-DEBUG=true
+DEBUG_ENABLED=true
 SECRET_KEY=do-not-use-in-prod
 ALLOWED_HOSTS="localhost"
 AUTHBROKER_CLIENT_ID="some_secret"
