@@ -2,7 +2,9 @@ import os
 
 import dj_database_url
 import environ
+from `.database import database_url_from_env
 from dotenv import load_dotenv
+
 load_dotenv()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -74,7 +76,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config()
+    "default": dj_database_url.config(
+        default=database_url_from_env("DATABASE_CREDENTIALS")
+    )
 }
 
 AUTHENTICATION_BACKENDS = [
