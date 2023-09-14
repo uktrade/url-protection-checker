@@ -8,9 +8,13 @@ Access is controlled via Staff SSO. To grant someone access, make sure that "url
 
 Their user record will be created the first time they vist the admin section.
 
-If you need to edit their user, make them a super user etc., this can only be done after their user record has been created.
+If you need to edit their user, make them a superuser etc., this can only be done after their user record has been created.
 
 ## Working on the application
+
+### Git branching strategy
+
+This repository uses [Git Flow](https://www.gitkraken.com/learn/git/git-flow).
 
 ### Managing environment variables
 
