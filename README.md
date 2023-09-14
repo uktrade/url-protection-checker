@@ -16,6 +16,18 @@ If you need to edit their user, make them a superuser etc., this can only be don
 
 This repository uses [Git Flow](https://www.gitkraken.com/learn/git/git-flow).
 
-### Managing environment variables
+However, paketobuildpacks/builder can't deal with a / in branch names, so no `feature/...` etc. please.
 
-A good way to manage this is to use [direnv](https://direnv.net/) with a `.envrc` file based on the `.envrc.sample` file in the root of this repository.
+### Managing your shell's environment variables
+
+A good way to manage the ones you want in your shell is to use [direnv](https://direnv.net/) with a `.envrc` file based on the `.envrc.sample` file in the root of this repository.
+
+### Running the application locally with Docker Compose
+
+Make yourself a `.env` based on `.env.sample`
+
+If it is the first time, or you have made changes to the application:
+
+```shell
+make build
+```
