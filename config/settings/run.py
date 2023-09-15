@@ -1,12 +1,13 @@
 import dj_database_url
 from dbt_copilot_python.database import database_url_from_env
+from dbt_copilot_python.network import setup_allowed_hosts
 
 from config.settings.base import *
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = (os.getenv('SECRET_KEY'))
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+ALLOWED_HOSTS = setup_allowed_hosts(env.list('ALLOWED_HOSTS'))
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
