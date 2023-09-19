@@ -1,6 +1,15 @@
 # URL Protection Checker
 
-Maintains a list of URLs that are publicly accessible on GOV.UK PaaS and, unless the URL is whitelisted in the URL Protection Checker, alerts if the URL is not protected by Staff SSO or the IP Filter.
+Maintains a list of URLs that are publicly accessible on GOV.UK PaaS.
+
+There is a [scheduled job running every hour in Jenkins](https://jenkins.ci.uktrade.digital/job/url%20protection%20checker-scheduler/) which runs:
+
+- `python manage.py load_spaces_db` get the list of available spaces from GOV.UK PaaS.
+- `python manage.py daily_check` perform the check and, unless a URL is whitelisted in the URL Protection Checker, alerts if the URL is not protected by Staff SSO or the IP Filter.
+
+Historically, URL Protection Checker has been hosted in GOV.uk PaaS Ireland so that it could run the checks from outside the IP Filter.
+
+To finish the migration to DBT PaaS, we are going to need to tackle [DBTP-450 Get URL Protection Checker's scheduled job running in DBT Paas](https://uktrade.atlassian.net/browse/DBTP-450).
 
 ## Adding a new admin user
 
