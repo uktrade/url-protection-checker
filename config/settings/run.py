@@ -11,7 +11,6 @@ ALLOWED_HOSTS = setup_allowed_hosts(env.list('ALLOWED_HOSTS'))
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
 DATABASES = {
     "default": dj_database_url.config(
         default=database_url_from_env("DATABASE_CREDENTIALS")

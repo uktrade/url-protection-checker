@@ -71,5 +71,3 @@ Temporary Items
 # Dynamically created
 .venv
 static
-
-data-dump-*.sql
