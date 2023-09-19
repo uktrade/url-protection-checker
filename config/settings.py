@@ -1,20 +1,26 @@
 import os
 
+import dj_database_url
 import environ
 from dotenv import load_dotenv
-
 load_dotenv()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 env = environ.Env()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = (os.getenv('SECRET_KEY'))
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if (os.getenv('DEBUG') == 'True') else False
+
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+
 
 # Application definition
 
@@ -63,6 +69,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+
+# Database
+# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+
+DATABASES = {
+    'default': dj_database_url.config()
+}
+
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'authbroker_client.backends.AuthbrokerBackend',
@@ -110,3 +124,22 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 LOGIN_REDIRECT_URL = 'admin-login-view'
 LOGIN_URL = '/auth/login/'
+AUTHBROKER_URL = os.getenv("AUTHBROKER_URL")
+AUTHBROKER_CLIENT_ID = os.getenv("AUTHBROKER_CLIENT_ID")
+AUTHBROKER_CLIENT_SECRET = os.getenv("AUTHBROKER_CLIENT_SECRET")
+AUTHBROKER_SCOPES = "read write"
+RESTRICT_ADMIN = env.bool("RESTRICT_ADMIN", True)
+
+CF_USERNAME = os.getenv("CF_USERNAME")
+CF_PASSWORD = os.getenv("CF_PASSWORD")
+CF_DOMAIN = os.getenv("CF_DOMAIN")
+ORG_GUID = os.getenv("ORG_GUID")
+EXCLUDE_ORG_AUTO_FILTER_SERVICE = env.list("EXCLUDE_ORG_AUTO_FILTER_SERVICE")
+BIND_ENABLED = os.getenv("BIND_ENABLED")
+SLACK_ENABLED = os.getenv("SLACK_ENABLED")
+AUTO_CREATE_IP_FILTER_ENABLED = env.bool("AUTO_CREATE_IP_FILTER_ENABLED", False)
+SLACK_TOKEN = os.getenv("SLACK_TOKEN")
+SLACK_URL = os.getenv("SLACK_URL")
+SLACK_CHANNEL = os.getenv("SLACK_CHANNEL")
+FILTER_URL = os.getenv("FILTER_URL")
+LOAD_DB_HOUR = os.getenv("LOAD_DB_HOUR")

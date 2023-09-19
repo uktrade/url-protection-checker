@@ -1,4 +1,0 @@
-application:
-  name: url-protection-checker
-  process:
-    - web
