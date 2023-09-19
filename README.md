@@ -21,7 +21,7 @@ If you need to edit their user, make them a superuser etc., this can only be don
 
 This repository uses [Git Flow](https://www.gitkraken.com/learn/git/git-flow).
 
-However, paketobuildpacks/builder can't deal with a / in branch names, so no `feature/...` etc. please.
+However, `paketobuildpacks/builder` can't deal with slashes (`/`) in branch names, so no `feature/...` etc. please.
 
 ### Managing your shell's environment variables
 
@@ -29,7 +29,7 @@ A good way to manage the ones you want in your shell is to use [direnv](https://
 
 ### Running the application locally with Docker Compose
 
-Make yourself a `.env` based on `.env.sample`
+Make yourself a `.env` based on `.env.sample`: `cp .env.sample .env`
 
 There is a [Makefile](./Makefile) with commands to help you.
 

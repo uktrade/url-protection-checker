@@ -26,7 +26,7 @@ shell:
 	$(web) python manage.py shell
 
 up:
-	make migrate
+	$(MAKE) migrate
 	docker-compose up
 
 up-detached:
