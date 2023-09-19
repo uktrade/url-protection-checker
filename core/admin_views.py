@@ -24,7 +24,7 @@ def admin_login_view(request):
 
     if request.user.is_authenticated:
         if not request.user.is_staff:
-            raise PermissionDenied
+            raise PermissionDenied('User is not staff')
         else:
             if ADMIN_REDIRECT_URL_SESSION_KEY in request.session:
                 del request.session[ADMIN_REDIRECT_URL_SESSION_KEY]

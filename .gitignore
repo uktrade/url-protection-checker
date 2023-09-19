@@ -38,9 +38,11 @@ pip-delete-this-directory.txt
 target/
 
 .idea/
+*.iml
 
 # dotenv
 .env
+.envrc
 
 .direnv/
 
