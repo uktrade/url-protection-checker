@@ -1,0 +1,6 @@
+---
+applications:
+  - name: url-protection-checker
+    buildpacks:
+      - https://github.com/cloudfoundry/python-buildpack.git
+    stack: cflinuxfs4
