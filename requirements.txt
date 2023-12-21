@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file=requirements.txt requirements.in
 #
-aiohttp==3.8.3
+aiohttp==3.9.0
     # via cloudfoundry-client
 aiosignal==1.3.1
     # via aiohttp
@@ -19,9 +19,7 @@ certifi==2022.12.7
     #   requests
     #   sentry-sdk
 charset-normalizer==2.1.1
-    # via
-    #   aiohttp
-    #   requests
+    # via requests
 cloudfoundry-client==1.30.0
     # via -r requirements.in
 dj-database-url==1.2.0
