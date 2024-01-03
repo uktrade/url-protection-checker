@@ -3,7 +3,7 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
 from django.urls import reverse
-from django.utils.http import is_safe_url
+from django.utils.http import url_has_allowed_host_and_scheme
 
 ADMIN_REDIRECT_URL_SESSION_KEY = 'admin_next_url'
 
@@ -16,7 +16,7 @@ def admin_login_view(request):
         REDIRECT_FIELD_NAME,
         request.session.get(ADMIN_REDIRECT_URL_SESSION_KEY, None))
 
-    if next_url and not is_safe_url(next_url, settings.ALLOWED_HOSTS, require_https=request.is_secure()):
+    if next_url and not url_has_allowed_host_and_scheme(next_url, settings.ALLOWED_HOSTS, require_https=request.is_secure()):
         next_url = None
 
     if not next_url:
