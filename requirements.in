@@ -1,5 +1,5 @@
 dj-database-url
-django==3.2.18
+django==4.2.8
 django-environ
 django-jquery
 notifications-python-client
@@ -8,7 +8,7 @@ python-dotenv
 requests
 sentry-sdk==1.14.0
 urllib3>=1.26.5
-django-staff-sso-client
+django-staff-sso-client==4.2.1
 cloudfoundry-client>=1.16.1
 whitenoise
 gunicorn
