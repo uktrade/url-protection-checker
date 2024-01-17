@@ -70,4 +70,5 @@ Temporary Items
 
 # Dynamically created
 .venv
+venv/
 static
