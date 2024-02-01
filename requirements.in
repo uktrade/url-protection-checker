@@ -5,15 +5,14 @@ django-jquery
 notifications-python-client
 psycopg2-binary==2.9.9
 python-dotenv
-requests
+requests==2.31.0
 sentry-sdk==1.14.0
 urllib3>=1.26.5
 django-staff-sso-client==4.2.1
-cloudfoundry-client>=1.16.1
+cloudfoundry-client==1.36.0
 whitenoise
 gunicorn
-protobuf>=3.15.0
 
 # Pinning versions to address security alert
 oauthlib>=3.2.1
-protobuf==3.19.5
+protobuf==4.25.2
