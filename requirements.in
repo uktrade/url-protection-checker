@@ -17,3 +17,5 @@ protobuf>=3.15.0
 # Pinning versions to address security alert
 oauthlib>=3.2.1
 protobuf==3.19.5
+aiohttp==3.9.2
+
