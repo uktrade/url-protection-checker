@@ -6,5 +6,6 @@ urlpatterns = [
     path('auth/', include('authbroker_client.urls', namespace='authbroker')),
     path('admin/login/', admin_login_view, name='admin-login-view'),
     path('admin/', admin.site.urls),
-    re_path(r'^', include('checker.urls')),
+    url(r'^', include('checker.urls')),
+    url(r'^', include('healthcheck.urls')),
 ]
