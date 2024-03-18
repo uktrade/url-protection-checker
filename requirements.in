@@ -1,5 +1,5 @@
 dj-database-url
-django==4.2.8
+django==4.2.11
 django-environ
 django-jquery
 notifications-python-client
